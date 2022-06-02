@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<main class="section">
+    <div class="card w-75 shadow">
+        <div class="card-body">
+            <h1>Account info</h1>
+            <form id="update_info">
+                <input type="text" id="update_username" value="{{ user.username }}">
+                <input type="email" id="update_email" value="{{ user.email }}">
+                <input type="submit" value="Update">
+                {% 
+                    set rules = {
+                        "username_rules": data_rules["username_rules"],
+                        "email_rules": data_rules["email_rules"]
+                    }
+                %}
+                <div class="my-normal">
+                  <ul type="none">
+                    <li>Rules:
+                      <ol class="px-normal py-normal">
+                        {% for rule_name in rules %}
+                          <li>{{ rule_name }}
+                            <ol class="px-normal">
+                                {% for rule in rules[rule_name] %}
+                                    <li>{{ rule }}</li>
+                                {% endfor %}
+                            </ol>
+                          </li>
+                          <br>
+                        {% endfor %}
+                      </ol>
+                    </li>
+                  </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<section class="section">
+    <div class="card w-75 shadow">
+        <h1 class="display-4">
+            <span class="text__default">Todo Lists count:</span>
+            <span id="counter">{{ user.short()['total_todo_lists'] }}</span>
+        </h1>
+    </div>
+</section>
+<section class="section">
+    <div class="card w-75 shadow">
+        <div class="card-body">
+            <h1>Add Todo List:</h1>
+            <form id="add_todo_list">
+                <input type="text" id="add_todo_list_title" placeholder="Title">
+                <input type="text" id="add_todo_list_deadline" placeholder="Deadline: dd/mm/yyyy">
+                <input type="submit" value="Add Todo List" class="bg__default__hover">
+                <div class="my-normal">
+                  <ul type="none">
+                    <li>Rules:
+                      <ol class="px-normal py-normal">
+                        {% for rule in data_rules["deadline_rules"] %}
+                          <li>{{ rule }}</li>
+                        {% endfor %}
+                      </ol>
+                    </li>
+                  </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="card w-75 shadow">
+        <div class="card-body">
+            <h1 class="display-4">Lists:</h1>
+            <ul class="px-normal py-normal" type="none" id="todo_lists">
+                {% for list in todo_lists %}
+                <li class="display-flex justify-content-between
+                        shadow px-normal py-normal
+                        section flex-wrap" id="todo-list-{{ list.public_id }}">
+                    <div>
+                        <h1>
+                            <a href="{{ url_for('main_manager.todo_list_detail',
+                                            list_public_id=list.public_id) }}" id="todo-list-title-{{ list.public_id }}" class="content">
+                                {{ list.title }}
+                            </a>
+                        </h1>
+                        <p class="display-block py-normal">
+                            <span>Completed: </span>
+                            <input type="checkbox" {% if list.completed %} checked {% endif %} id="todo-list-completed-{{ list.public_id }}" class="completed-checkbox disabled">
+                            <span>{{ list.completed }}</span>
+                        </p>
+                        <p>
+                            <span>Deadline:</span> <span class="content" id="todo-list-deadline-{{ list.public_id }}">{{ list.deadline }}</span>
+                        </p>
+                    </div>
+                    <div class="py-normal">
+                        <button class="
+                                btn bg__yellow text__light btn-yellow
+                                pointer shadow todo-list-open-updator-btns" data-id="todo-list-{{ list.public_id }}">
+                            Update              
+                        </button>
+                        <button class="
+                                btn bg__red text__light btn-red
+                                pointer shadow delete-btns" data-id="todo-list-{{ list.public_id }}">
+                            Delete
+                        </button>      
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+<section class="pagination">
+    {% for page in range(1, pages + 1) %}
+    <a href="{{ url_for('user.profile') }}?page={{ page }}" class="pagination-item">{{ page }}</a>
+    {% endfor %}
+</section>
+{% block script %}
+<script src="{{ url_for('static', filename='js/update_profile.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/todo_list_engine.js') }}"></script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}TodoList{% endblock %}
+{% block content %}
+<div class="section">
+    <div class="card w-75 shadow">
+        <div class="card-body">
+            <a href="{{ url_for('user.profile') }}?page={{ request.args.get('page', 1) }}"
+                class="text__default display-4 active-list" id="todo-list-{{ todo_list.public_id }}">{{
+                todo_list['title'] }}</a>
+        </div>
+    </div>
+</div>
+<section class="section">
+    <div class="card w-75 shadow">
+        <h1 class="display-4">
+            <span class="text__default">Todos count:</span>
+            <span id="counter">{{ total_todos }}</span>
+        </h1>
+    </div>
+</section>
+<section class="section">
+    <div class="card w-75 shadow">
+        <div class="card-body">
+            <form id="add_todo_form">
+                <input type="text" id="add_todo_title" placeholder="Title" class="my-normal display-block">
+                <textarea id="add_todo_body" cols="30" rows="10" placeholder="Enter Todo Body" class="w-50 display-block my-normal"></textarea>
+                <div class="my-normal">
+                    <ul type="none">
+                        <li>Rules:
+                            <ol class="px-normal py-normal">
+                                {% for rule in data_rules["deadline_rules"] %}
+                                <li>{{ rule }}</li>
+                                {% endfor %}
+                            </ol>
+                        </li>
+                    </ul>
+                </div>
+                <input type="text" id="add_todo_deadline" placeholder="Deadline: dd/mm/yyyy">
+                <input type="submit" value="Add Todo" class="bg__default__hover">
+            </form>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="card w-75 shadow">
+        <div class="card-body">
+            <h1 class="display-4 px-normal py-normal">Todos:</h1>
+            <ul class="py-normal px-normal" id="todos" type="none">
+                {% for todo in todos %}
+                <li class="display-flex justify-content-between shadow px-normal py-normal section flex-wrap"
+                    id="todo-item-{{ todo.public_id }}">
+                    <div>
+                        <h1 class="display-4 text__default
+                            py-normal" id="todo-item-title-{{ todo.public_id }}">
+                            {{ todo.title }}
+                            </h2>
+                            <p class="font-size-md py-normal px-normal" id="todo-item-body-{{ todo.public_id }}">
+                                {{ todo.body }}
+                            </p>
+                            <p class="py-normal">
+                                <span>Completed:</span>
+                                <input type="checkbox" class="completed-checkbox" {% if todo.completed %} checked {%
+                                    endif %} id="todo-item-completed-{{ todo.public_id }}" disabled>
+                                <span>{{ todo.completed }}</span>
+                            </p>
+                            <p>
+                                <span>Deadline:</span>
+                                <span id="todo-item-deadline-{{ todo.public_id }}">{{ todo.deadline }}</span>
+                            </p>
+                    </div>
+                    <div class="py-normal">
+                        <button class="btn bg__yellow text__light btn-yellow pointer shadow todo-item-open-updator-btns"
+                            data-id="todo-item-{{ todo.public_id }}">
+                            Update</button><button class="btn bg__red text__light btn-red pointer shadow delete-btns"
+                            data-id="todo-item-{{ todo.public_id}}">
+                            Delete
+                        </button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+<div class="pagination">
+    {% for page in range(1, pages + 1) %}
+    <a href="{{ url_for('main_manager.todo_list_detail', list_public_id=todo_list.public_id) }}?page={{ page }}"
+        class="pagination-item">{{ page }}</a>
+    {% endfor %}
+</div>
+{% block script %}
+<script type="module" src="{{ url_for('static', filename='js/todo_engine.js') }}"></script>
+{% endblock %}
+{% endblock %}

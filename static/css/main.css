@@ -1,0 +1,133 @@
+@import url('./helpers.css');
+@font-face {
+    font-family: "Main";
+    src: url(../Open_Sans/static/OpenSans/OpenSans-Light.ttf);
+}
+@font-face {
+    font-family: "Gen-Font";
+    src: url(../Audiowide/Audiowide-Regular.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body 
+{
+    font-family: "Main";
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/*****************
+***** Navbar *****
+*****************/
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem; 
+    color: white;
+    transition: all 0.2s ease-in;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 3;
+}
+
+.navbar .logo {
+    padding: 18px 20px;
+}
+
+.navbar .right {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+}
+
+.navbar .right li {
+    padding: 18px 20px;
+    transition: all 0.2s linear;
+}
+
+.navbar .right li a, .navbar .right details li a {
+    text-decoration: none;
+    color: white;
+}
+
+.card {
+    width: 300px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    position: relative;
+}
+
+.card-body {
+    width: 100%;
+    position: relative;
+}
+
+.card-body input, textarea {
+    font-size: 1.2rem;
+    padding: 12px 20px;
+    border: 1px solid var(--default);
+}
+
+
+.card-body .field{
+    width: 100%;
+}
+
+.card-body input:focus, textarea {
+    outline: none;
+}
+
+.card-body input[type='submit'] {
+    background-color: var(--default);
+    color: white;
+    margin: 35px auto 0px auto;
+    cursor: pointer;
+    transition: 0.2s ease-in;
+}
+
+
+.border__bt__none {
+    border-bottom: none !important;
+}
+
+.auth-card {
+    margin: 45px auto 15px auto;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    border: 2px solid var(--default);
+    background-color: var(--default);
+    color: white;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 3;
+}
+
+.pagination .pagination-item {
+    display: inline;
+    padding: 6px;
+    font-size: 1.2rem;
+    text-decoration: none;
+    color: white;
+}
+
+@media (min-width: 0) and (max-width: 464.9px) {
+    .navbar .right li {
+        padding: 18px 12px;
+    }
+    .w-75 {
+        width: 99% !important;
+    }
+    .card {
+        width: 90% !important;
+    }
+}

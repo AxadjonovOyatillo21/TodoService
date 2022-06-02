@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Register Page{% endblock %}
+{% block content %}
+    <div class="section">
+        <div class="card shadow">
+            <div class="card-title">
+                <h1>Register</h1>
+            </div>
+            <div class="card-body auth-card">
+                <form action="/auth/register" method="post">
+                    <div class="shadow">
+                        <input type="username" name="username" id="username" placeholder="Username" class="field border__bt__none">
+                        <input type="email" name="email" id="email" placeholder="Email" class="field border__bt__none">
+                        <input type="password" name="password" id="password" placeholder="Password" class="field">
+                    </div>
+                    <input type="submit" value="Sign Up" class="pointer bg__default__hover shadow">
+                </form>
+            </div>
+            <div class="card-body auth-card">
+                <p>
+                    Already have account? <a href="{{ url_for('auth.login') }}">Sign In</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
