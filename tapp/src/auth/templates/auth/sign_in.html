@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Login Page{% endblock %}
+{% block content %}
+    <div class="section">
+        <div class="section">
+            <div class="card shadow">
+                <div class="card-title">
+                    <h1>Sign in</h1>
+                </div>
+                <div class="card-body auth-card">
+                    <form action="/auth/login" method="post">
+                        <div class="shadow">
+                            <input type="text" name="username" id="username" placeholder="Username" class="field border__bt__none">
+                            <input type="password" name="password" id="password" placeholder="Password" class="field">
+                        </div>
+                        <br><br>
+                        <div class="field font-size-md">
+                            <label for="remember">Remember:</label>
+                            <input type="checkbox" name="remember" id="remember">
+                        </div>
+                        <input type="submit" value="Login" class="pointer bg__default__hover shadow">
+                    </form>
+                </div>
+                <div class="card-body auth-card">
+                    <p>
+                        Are you new? <a href="{{ url_for('auth.register') }}">Register now</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+{% endblock %}
