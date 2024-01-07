@@ -18,4 +18,4 @@ DB = os.getenv("DB")
 if all([USERNAME, PASSWORD, SERVER, PORT, DB_NAME, DB]): 
     SQLALCHEMY_DATABASE_URI = f"{DB}://{USERNAME}:{PASSWORD}@{SERVER}:{PORT}/{DB_NAME}"
 else:
-    SQLALCHEMY_DATABASE_URI = "sqlite:///database/database.sqlite"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///database.sqlite"
