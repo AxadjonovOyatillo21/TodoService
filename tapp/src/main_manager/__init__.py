@@ -1,4 +1,3 @@
-from crypt import methods
 from urllib import response
 from flask import (
     Blueprint,
