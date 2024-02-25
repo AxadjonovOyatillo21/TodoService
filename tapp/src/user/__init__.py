@@ -38,11 +38,16 @@ def profile():
         return jsonify(response), response["code"]
 
     paginate = Pagination()
+    current_page = request.args.get("current_page", 1, type=int)
     todo_lists = TodoList.query.filter_by(
         owner=user).order_by(TodoList.id).all()
-    todo_lists = paginate.paginate_item(request, todo_lists)
+    todo_lists = paginate.paginate_item(
+        current_page, 
+        todo_lists
+    )
 
     return render_template("user/profile.html",
                            user=user, todo_lists=todo_lists,
+                           current_page=current_page,
                            pages=math_ceil(len(user.todo_lists) / 5),
                            data_rules=data_rules)

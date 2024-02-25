@@ -7,8 +7,7 @@ now = datetime.utcnow
 
 
 class Pagination:
-    def paginate_item(self, request, selection):
-        page = request.args.get('page', 1, type=int)
+    def paginate_item(self, page, selection):
         start = (page - 1) * TODO_OR_TODOLIST_PER_PAGE
         end = start + TODO_OR_TODOLIST_PER_PAGE
         items = [item.format() for item in selection]
@@ -30,47 +29,6 @@ months = [
     "November",
     "December"
 ]
-
-
-# months_info = {
-#     "January": {
-#         "days": 31
-#     },
-#     "February": {
-#         "days": 29
-#     },
-#     "March": {
-#         "days": 31
-#     },
-#     "April": {
-#         "days": 30
-#     },
-#     "May": {
-#         "days": 31
-#     },
-#     "June": {
-#         "days": 30
-#     },
-#     "July": {
-#         "days": 31
-#     },
-#     "August": {
-#         "days": 31
-#     },
-#     "September": {
-#         "days": 30
-#     },
-#     "October": {
-#         "days": 31
-#     },
-#     "November": {
-#         "days": 30
-#     },
-#     "December": {
-#         "days": 31
-#     }
-# }
-
 
 numbers = [
     "first",

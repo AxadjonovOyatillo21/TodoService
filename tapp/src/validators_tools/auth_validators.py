@@ -2,13 +2,12 @@ from src.validators_tools.common_validators import length_validator
 
 
 def password_validator(value):
-    if length_validator(value):
-        if isinstance(value, str) and value.isalnum() and len(value) > 6:
-            return True
-        else:
-            return False
-    else:
+    if not length_validator(value):
         return False
+    if not (isinstance(value, str) and value.isalnum() and len(value) > 6):
+        return False
+    return True
+
 
 
 def is_true(value):
@@ -16,24 +15,21 @@ def is_true(value):
 
 
 def email_validator(value):
-    if value:
-        if "@" in value:
-            parts = value.split("@")
-            if parts[0].isalnum() and len(parts[-1]) > 5:
-                if "." in parts[-1]:
-                    parts_1 = parts[-1].split(".")
-                    if len(parts_1[-1]) >= 2:
-                        if len(parts_1[0]) >= 4:
-                            return True
-                        else:
-                            return False
-                    else:
-                        return False
-                else:
-                    return False
-            else:
-                return False
-        else:
-            return False
-    else:
+    if not value:
         return False
+    if not ("@" in value):
+        return False
+    parts = value.split("@")
+    if not (parts[0].isalnum() and len(parts[-1]) > 5):
+        return False
+    if not("." in parts[-1]):
+        return False
+    parts_1 = parts[-1].split(".")
+    if not (len(parts_1[-1]) >= 2):
+        return False
+    if not (len(parts_1[0]) >= 4):
+        return False
+    return True
+
+
+# updated with early exit strategy

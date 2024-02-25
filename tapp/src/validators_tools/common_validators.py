@@ -20,14 +20,15 @@ data_rules = {
 
 
 def length_validator(value):
-    if value:
-        value_splitted = value.split()
-        if len(value_splitted) >= 1:
-            if value and len(value) > 3:
-                return True
-            else:
-                return False
-        else:
-            return False
-    else:
+    if not value:
         return False
+    
+    splitted_value = value.split()
+    
+    if not len(splitted_value) >= 1:
+        return False
+    
+    if not (value and len(value) > 3):
+        return False
+    
+    return True

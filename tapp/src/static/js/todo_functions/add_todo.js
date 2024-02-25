@@ -14,15 +14,15 @@ export default function add_todo_function(e) {
         "success": false,
         "code": 400
     };
-    let todo_title = document.getElementById("add_todo_title").value;
+    let todo_title = document.getElementById("add_todo_title");
     // if (!todo_title.trim()) {
     //     message.messages.push("Empty title!");
     // }
-    let todo_body = document.getElementById("add_todo_body").value;
+    let todo_body = document.getElementById("add_todo_body");
     // if (!todo_body.trim()) {
     //     message.messages.push("Empty body!");
     // }
-    let deadline = document.getElementById("add_todo_deadline").value;
+    let deadline = document.getElementById("add_todo_deadline");
     // if (!deadline.trim()) {
     //     message.messages.push("Empty deadline!");
     // }
@@ -36,9 +36,9 @@ export default function add_todo_function(e) {
         fetch(url, {
             method: "POST",
             body: JSON.stringify({
-                "title": todo_title,
-                "body": todo_body,
-                "deadline": deadline,
+                "title": todo_title.value,
+                "body": todo_body.value,
+                "deadline": deadline.value,
             }),
             headers: {
                 "Content-Type": "application/json"
@@ -56,6 +56,9 @@ export default function add_todo_function(e) {
                     value = +value + 1;
                     todo_lists_count.innerHTML = value;
                     todo_lists_count.style.color = "green";
+                    todo_title.value = "";
+                    todo_body.value = "";
+                    deadline.value = "";
                 }
                 create_message_box(jsonResponse);
             })

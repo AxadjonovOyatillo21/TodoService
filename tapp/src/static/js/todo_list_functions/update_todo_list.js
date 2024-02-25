@@ -68,7 +68,7 @@ function update_todo_list_function(e) {
             .then(response => response.json())
             .then(jsonResponse => {
                 if (jsonResponse.success) {
-                    console.log(parent_element)
+                    console.log(parent_element, jsonResponse)
                     parent_element.innerHTML = "";
                     let containers = new Containers();
                     let create_container = containers.create_full_todo_list_container(jsonResponse, parent_element);

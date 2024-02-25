@@ -38,7 +38,7 @@ if (update_form) {
                         if (jsonResponse.success) {
                             username_in_navbar.textContent = username.value;
                         } else {
-                            username.value = username_in_navbar.textContent;
+                            username.value = jsonResponse.username;
                             email.value = jsonResponse.email;
                         }
                     }

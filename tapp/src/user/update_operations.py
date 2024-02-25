@@ -12,58 +12,83 @@ from src.validators_tools.auth_validators import (
 
 
 def update_profile(user, json_data):
+
     response = {
         "messages": [],
         "code": 400,
         "success": False
     }
-    messages = response["messages"]
-    username = json_data.get("username") or None
-    email = json_data.get("email") or None
+    username = json_data.get("username", None)
+    email = json_data.get("email", None)
+
+    if (username == user.username) and (email == user.email):
+        response["messages"].append("Nothing to update")
+
     if username != user.username:
-        if not User.query.filter_by(username=username).first():
-            if length_validator(username):
+
+        if User.query.filter_by(username=username).first():
+
+            response["messages"].append("User with this username exists")
+
+        else:
+            if not length_validator(username):
+
+                response["messages"].append("Username is weak")
+
+            else:
+
                 user.username = username
-                messages.append(
-                    "Username successfully updated!")
                 response["code"] = 200
                 response["success"] = True
-            else:
-                messages.append("Username is weak")
-        else:
-            messages.append(
-                "User with given username is already exists!")
-    else:
-        messages.append(
-            "You've given me same username to update :D, so i didn't update it! OK?")
+                response["messages"].append(
+                    "Username was successfully updated")
 
     if email != user.email:
-        if not User.query.filter_by(email=email).first():
-            if email_validator(email):
-                user.email = email
-                messages.append(
-                    "Email successfully updated!")
-                response["code"] = 200
-                if not response["success"]:
-                    response["success"] = True
-            else:
-                messages.append("Email is wrong")
+
+        if User.query.filter_by(email=email).first():
+
+            if response["success"]:
+                response["code"] = 400
+                response["success"] = False
+                response["messages"] = []
+
+            response["messages"].append("User with this email exists")
+
         else:
-            messages.append(
-                "User with given email is already exists!")
-    else:
-        messages.append(
-            "You've given me same email to update :D, so i didn't update it! OK?")
-    if response["code"] == 200:
+
+            if not email_validator(email):
+
+                if response["success"]:
+                    response["code"] = 400
+                    response["success"] = False
+                    response["messages"] = []
+
+                response["messages"].append("Bad email")
+
+            else:
+
+                user.email = email
+                response["code"] = 200
+                response["success"] = True
+                response["messages"].append("Email was succesfully updated")
+
+    if response["success"]:
+
         try:
             user.update()
+
         except SQLAlchemyError:
-            messages.append("Something went wrong!")
+
             response["code"] = 422
             response["success"] = False
+            response["messages"] = ["Something went wrong"]
+
         finally:
             db.session.close()
+
     else:
+
         response["username"] = user.username
         response["email"] = user.email
+
     return response

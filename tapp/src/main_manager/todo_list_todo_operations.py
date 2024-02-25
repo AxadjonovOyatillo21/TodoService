@@ -1,4 +1,3 @@
-from flask import jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from src.database.models import db, TodoList, Todo
@@ -19,20 +18,24 @@ def create_operation(user, data, todo_list=None):
         "code": 200,
         "success": True
     }
+
     if not length_validator(title):
-        response["messages"].append("Bad title! Try again!")
+        response["messages"].append("Invalid title! Try again!")
         response["code"] = 400
         response["success"] = False
+
     if "body" in data.keys():
         body = data.get("body", None)
         if not len(body) >= 6:
-            response["messages"].append("Bad body! Try again!")
+            response["messages"].append("Invalid body! Try again!")
             response["code"] = 400
             response["success"] = False
+
     if not deadline_validator(deadline)["success"]:
         response["messages"].append(deadline_validator(deadline)["message"])
         response["code"] = 400
         response["success"] = False
+
     if response["code"] == 200:
         try:
             if data["type"] == "todo":
@@ -43,22 +46,104 @@ def create_operation(user, data, todo_list=None):
                 todo_list.completed = new_todo.completed
                 todo_list.update()
                 response["messages"].append(
-                    f"Todo with id {new_todo.public_id} successfully created!")
+                    "New todo is successfully created")
                 response["todo_data"] = new_todo.format()
             else:
                 new_todo_list = TodoList(title, deadline)
                 new_todo_list.owner = user
                 new_todo_list.insert()
                 response["messages"].append(
-                    f"Todo List with id {new_todo_list.public_id} successfully created!")
+                    "New todo list is successfully created!")
                 response["todo_list_data"] = new_todo_list.short()
+
         except SQLAlchemyError:
+
             response["messages"].append("Something went wrong!")
             response["code"] = 422
             response["success"] = False
+
         finally:
             db.session.close()
+
     return response
+
+
+def update_operation(user, todo_list, data):
+    response = {
+        "messages": [],
+        "code": 200,
+        "success": True
+    }
+    similar = True
+    if not todo_list in user.todo_lists:
+        response["messages"].append("resource not found")
+        response["code"] = 404
+        response["success"] = False
+        return response
+    
+
+    new_title = data.get("title", None)
+    new_deadline = data.get("deadline", None)
+    new_completed = data.get("completed", None)
+    
+
+    if new_title != todo_list.title:
+        similar = False
+        if length_validator(new_title):
+            todo_list.title = new_title
+        else:
+            response["messages"].append("Invalid title!")
+            response["code"] = 400
+            response["success"] = False
+    
+
+    if new_deadline != todo_list.deadline:
+        if  similar:
+            similar = False
+
+        if not deadline_validator(new_deadline)["success"]:
+            if response["code"] == 200:
+                response["code"] = 400
+                response["success"] = False
+            response["messages"].append("Invalid deadline format or deadline!")
+
+        elif response["code"] == 200:
+            todo_list.deadline = new_deadline
+
+
+    if new_completed != todo_list.completed:
+        if similar:
+            similar = False
+
+        if not isinstance(new_completed, bool):
+            if response["code"] == 200:
+                response["code"] = 400
+                response["success"] = False
+            response["messages"].append("Invalid completed type!")
+
+        elif response["code"] == 200:
+            todo_list.completed = new_completed
+    
+
+    if response["success"] and not similar:
+        try:
+            todo_list.update()
+            response["messages"].append("Successfully updated!")
+            response["todo_list_data"] = todo_list.short()
+
+        except SQLAlchemyError:
+            response["messages"].append("Something went wrong")
+            response["code"] = 422
+            response["success"] = False
+            db.session.rollback()
+        
+        finally:
+            db.session.close()
+    elif response["success"] and similar:
+        response["messages"].append("Nothing to update")
+        response["todo_list_data"] = todo_list.short()
+
+    return response     
 
 
 def delete_operation(user, todo_list, list_public_id, todo=None, todo_public_id=None):
@@ -92,6 +177,8 @@ def delete_operation(user, todo_list, list_public_id, todo=None, todo_public_id=
             response["code"] = 404
             response["success"] = False
             return response
+    
+    
     try:
         if item_type == "todo":
             todo.delete()
@@ -106,6 +193,9 @@ def delete_operation(user, todo_list, list_public_id, todo=None, todo_public_id=
         response["error_message"] = "unprocessable entity"
         response["code"] = 422
         response["success"] = False
+        db.session.rollback()
     finally:
         db.session.close()
+    
+    
     return response
